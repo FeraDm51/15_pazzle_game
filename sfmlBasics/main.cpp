@@ -15,7 +15,7 @@ private:
     sf::RectangleShape rect;
     int value;
 
-    const static int SIZE = 100;
+    const static int SIZE = 75;
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states)const {
         target.draw(rect);
@@ -53,6 +53,10 @@ public:
 
     int getValue()const { return value; }
     void setValue(int value) { this->value = value; }
+
+    bool contains(sf::Vector2f point) {
+        return rect.getGlobalBounds().contains(point);
+    }
 };
 
 class Board : public sf::Drawable {
@@ -113,6 +117,19 @@ public:
             swapCells(i, j, i - direction.x, j - direction.y);
         }
     }
+
+    //Возвращает номер строки, номер столбца
+    sf::Vector2i getCell(sf::Vector2f point) {
+        for (int i = 0; i < cells.size(); ++i) {
+            for (int j = 0; j < cells[i].size(); ++j) {
+                if (cells[i][j].contains(point)) {
+                    return sf::Vector2i(i, j);
+                }
+            }
+        }
+        return sf::Vector2i(-1, -1);        //Точка находится вне поля
+    }
+
 };
 
 int main() {
@@ -127,6 +144,18 @@ int main() {
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 window.close();
+
+            if (event.type == sf::Event::MouseButtonPressed) {
+                auto mousePos = (sf::Vector2f) sf::Mouse::getPosition(window);
+                auto cellCords = board.getCell(mousePos);
+
+                std::cout << cellCords.x << ' ' << cellCords.y << '\n';
+                
+
+            }
+
+            
+
             /*
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
                 board.move(i, j, LEFT);
