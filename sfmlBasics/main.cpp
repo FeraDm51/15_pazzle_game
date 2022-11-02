@@ -26,7 +26,7 @@ private:
         sf::Text text;
         text.setFont(font);
         text.setString(std::to_string(value).c_str());
-        text.setOrigin(sf::Vector2f(text.getLocalBounds().width, text.getLocalBounds().height) / 2.f);
+        text.setOrigin(sf::Vector2f(text.getLocalBounds().width / 2.f, text.getLocalBounds().height));
         text.setPosition(rect.getPosition() + rect.getSize() / 2.f);
         text.setFillColor(sf::Color(48, 173, 227));
         target.draw(text);
